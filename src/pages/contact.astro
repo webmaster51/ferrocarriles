@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoBlock from '../components/InfoBlock.astro';
+import SedeCard from '../components/SedeCard.astro';
+import TramitesAdministrativos from '../components/TramitesAdministrativos.astro';
+import { sedes, type Sede } from '../data/sedes';
+import { site } from '../data/site';
+import Info from '@/components/Info.astro';
+
+const contactoSedes = sedes.filter((s: Sede) => s.id === 'country' || s.id === 'ups-bogota');
+---
+
+<BaseLayout title="Contacto" description="Teléfonos, correos y canales de atención de Sociedad Clínica Emcosalud.">
+  <Info eyebrow="Contacto" title="Estamos para atenderte" compact>
+    <div class="mt-6 flex flex-wrap gap-4 text-sm text-slate-600">
+      <p>
+        <span class="font-bold text-slate-900">Línea nacional 24 horas:</span>{' '}
+        <a href={`tel:${site.lineaNacional}`} class="text-brand-600 hover:underline">{site.lineaNacional}</a>
+      </p>
+      <p>
+        <span class="font-bold text-slate-900">Línea Bogotá:</span>{' '}
+        <a href={`tel:${site.lineaBogota}`} class="text-brand-600 hover:underline">{site.lineaBogota}</a>
+      </p>
+    </div>
+  </Info>
+
+  <section class="py-10 sm:py-12">
+    <div class="container-page space-y-8">
+      {contactoSedes.map((sede) => <SedeCard sede={sede} />)}
+    </div>
+  </section>
+
+  <InfoBlock>
+    <TramitesAdministrativos />
+  </InfoBlock>
+</BaseLayout>

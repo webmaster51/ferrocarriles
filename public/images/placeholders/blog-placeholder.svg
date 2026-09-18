@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="blogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dbe4f0"/>
+      <stop offset="100%" stop-color="#375c8f"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#blogGrad)"/>
+  <circle cx="520" cy="80" r="130" fill="#ffffff" opacity="0.12"/>
+  <g transform="translate(268,148)" opacity="0.95">
+    <circle cx="52" cy="52" r="52" fill="#ffffff" opacity="0.9"/>
+    <path d="M52 28v48M28 52h48" stroke="#24417c" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</svg>

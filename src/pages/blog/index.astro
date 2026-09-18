@@ -1,0 +1,164 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// Desactivar el prerenderizado para capturar la query string `?page=X` en cada petición
+export const prerender = false;
+
+// 1. Configuración de tu Portal y CMS
+const PORTAL_ID = 1; // <--- Cambia por el ID real de este portal en tu base de datos
+const CMS_URL = 'http://localhost:4321'; // URL base de tu backend/CMS
+
+// Obtener el número de página actual desde la URL (?page=1 por defecto)
+const pageParam = Astro.url.searchParams.get('page');
+const currentPage = pageParam ? Math.max(1, parseInt(pageParam, 10) || 1) : 1;
+const PER_PAGE = 9;
+
+interface PostItem {
+  id: string;
+  title: string;
+  excerpt?: string | null;
+  publishedAt?: string | null;
+  createdAt: string;
+  slug: string;
+  featuredUrl?: string | null;
+}
+
+let posts: {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  slug: string;
+  imageUrl: string;
+}[] = [];
+let totalPages = 1;
+
+try {
+  // 2. Consumimos el endpoint JSON pasando tanto la paginación como el portalId
+  const response = await fetch(`http://localhost:4321/api/blog.json?page=${currentPage}&limit=${PER_PAGE}`);
+
+  if (response.ok) {
+    const json = await response.json();
+    const rawPosts: PostItem[] = json.data ?? [];
+    
+    // Obtenemos el total de páginas directamente desde los metadatos devueltos por el DTO del CMS
+    if (json.meta?.totalPages) {
+      totalPages = json.meta.totalPages;
+    }
+
+    posts = rawPosts.map((post) => {
+      let imageUrl = post.featuredUrl || '';
+
+      // 3. Solución definitiva para imágenes: si la ruta es relativa, le anteponemos el dominio del CMS
+      if (imageUrl && imageUrl.startsWith('/')) {
+        imageUrl = `${CMS_URL}${imageUrl}`;
+      }
+
+      return {
+        id: post.id,
+        title: post.title,
+        excerpt: post.excerpt || '',
+        date: post.publishedAt || post.createdAt,
+        slug: post.slug,
+        imageUrl,
+      };
+    });
+  }
+} catch (error) {
+  console.error('Error al obtener las publicaciones del blog:', error);
+  posts = [];
+}
+
+function formatDate(iso: string) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+---
+
+<BaseLayout title="Blog">
+  <section class="section-block py-10 sm:py-16">
+    <div class="container-page">
+      <h1 class="section-title mb-8">Blog</h1>
+
+      {posts.length > 0 ? (
+        <>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => (
+              <article class="card-base flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-lg">
+                <!-- Imagen del post -->
+                <a href={`/blog/${post.slug}`} class="block aspect-video overflow-hidden bg-slate-100">
+                  {post.imageUrl ? (
+                    <img
+                      src={post.imageUrl}
+                      alt={post.title}
+                      class="h-full w-full object-cover transition duration-300 hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="flex h-full w-full items-center justify-center bg-slate-200 text-xs text-slate-400">
+                      Sin imagen
+                    </div>
+                  )}
+                </a>
+
+                <!-- Contenido -->
+                <div class="flex flex-1 flex-col p-5">
+                  <time class="mb-2 block text-xs font-bold text-brand-green-dark" datetime={post.date}>
+                    {formatDate(post.date)}
+                  </time>
+                  <h2 class="m-0 mb-3 text-lg font-bold leading-tight">
+                    <a href={`/blog/${post.slug}`} class="text-brand-blue no-underline hover:text-brand-green-dark">
+                      <Fragment set:html={post.title} />
+                    </a>
+                  </h2>
+                  <p class="m-0 text-sm text-slate-600 line-clamp-3">{post.excerpt}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <!-- Controles de Paginación -->
+          {totalPages > 1 && (
+            <nav class="mt-12 flex items-center justify-center gap-4" aria-label="Navegación del blog">
+              {currentPage > 1 ? (
+                <a
+                  href={`/blog?page=${currentPage - 1}`}
+                  class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+                >
+                  &larr; Anteriores
+                </a>
+              ) : (
+                <span class="cursor-not-allowed rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-400">
+                  &larr; Anteriores
+                </span>
+              )}
+
+              <span class="text-sm font-medium text-slate-600">
+                Página {currentPage} de {totalPages}
+              </span>
+
+              {currentPage < totalPages ? (
+                <a
+                  href={`/blog?page=${currentPage + 1}`}
+                  class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+                >
+                  Siguientes &rarr;
+                </a>
+              ) : (
+                <span class="cursor-not-allowed rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-400">
+                  Siguientes &rarr;
+                </span>
+              )}
+            </nav>
+          )}
+        </>
+      ) : (
+        <p class="text-center text-slate-600">No hay entradas publicadas en esta categoría actualmente.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>

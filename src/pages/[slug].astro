@@ -1,0 +1,29 @@
+---
+// Ruta catch-all limitada EXCLUSIVAMENTE a las páginas stub de stubPages.ts
+// (remanentes vacíos de WooCommerce/tema demo). NO ampliar este archivo para
+// enrutar otras páginas — cada una de ellas tiene su propio .astro dedicado
+// en src/pages/, según la decisión de modelado de contenido del plan.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Info from '../components/Info.astro';
+import StubNotice from '../components/StubNotice.astro';
+import { stubPages } from '../data/stubPages';
+
+export function getStaticPaths() {
+  return stubPages.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+---
+
+<BaseLayout title={page.title} description={page.message}>
+  
+  <Info title={page.title} compact />
+  <div class="pb-16 sm:pb-20">
+    <div class="container-page">
+      <StubNotice message={page.message} />
+    </div>
+  </div>
+</BaseLayout>

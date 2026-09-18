@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoBlock from '../components/InfoBlock.astro';
+import VisualForm from '../components/VisualForm.astro';
+import { pqrsFields } from '../data/forms/pqrsFields';
+import Info from '@/components/Info.astro';
+
+const definiciones = [
+  ['Petición', 'Solicitud formal para recibir información o servicios.'],
+  ['Queja', 'Inconformidad por mala atención o trato recibido.'],
+  ['Reclamo', 'Exigencia para corregir una situación que afectó al usuario.'],
+  ['Denuncia', 'Informe sobre conducta irregular o ilegal.'],
+  ['Sugerencia', 'Propuesta para mejorar procesos o servicios.'],
+  ['Felicitación', 'Reconocimiento por atención o servicio satisfactorio.'],
+];
+---
+
+<BaseLayout title="PQRS" description="Formulario de PQRDSF — Peticiones, Quejas, Reclamos, Denuncias, Sugerencias y Felicitaciones.">
+  <Info eyebrow="SIAU" title="Formulario de PQRDSF" description="Sistema de Información y Atención al Usuario" compact />
+
+  <InfoBlock title="¿Qué significa P-Q-R-D-S-F?">
+    <p class="max-w-3xl">
+      Este formulario ha sido diseñado por la dependencia de SIAU para facilitar la gestión y trámite de tus
+      PQRDSF.
+    </p>
+    <dl class="mt-6 grid gap-4 sm:grid-cols-2">
+      {
+        definiciones.map(([term, desc]) => (
+          <div class="rounded-xl border border-slate-200 bg-white p-4">
+            <dt class="font-bold text-brand-700">{term}</dt>
+            <dd class="mt-1 text-sm text-slate-600">{desc}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <ul class="mt-6 list-disc space-y-1.5 pl-5 text-sm text-slate-500">
+      <li>El formulario debe completarse en su totalidad y en un solo envío.</li>
+      <li>Las solicitudes serán atendidas en estricto orden de llegada.</li>
+      <li>La gestión es realizada por el área de atención al usuario de Emcosalud S.A.</li>
+    </ul>
+  </InfoBlock>
+
+  <InfoBlock title="Radica tu solicitud" class="bg-brand-50/40">
+    <VisualForm fields={pqrsFields} />
+  </InfoBlock>
+</BaseLayout>

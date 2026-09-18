@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoBlock from '../components/InfoBlock.astro';
+import PqrsdfCards from '../components/PqrsdfCards.astro';
+import { pdfs } from '../data/pdfs';
+import { site } from '../data/site';
+import Info from '@/components/Info.astro';
+---
+
+<BaseLayout
+  title="Mejoremos Juntos"
+  description="Sistema de Información y Atención al Usuario (SIAU): derechos y deberes, PQRDSF, participación ciudadana y asignación de citas."
+>
+  <Info eyebrow="SIAU" title="Mejoremos Juntos" description="Sistema de Información y Atención al Usuario" compact />
+
+  <InfoBlock eyebrow="1" title="Derechos y deberes">
+    <p class="max-w-2xl">Conoce los derechos y deberes que tienes como usuario dentro de nuestra institución.</p>
+    <a href={pdfs.derechosDeberes} target="_blank" rel="noopener" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold !text-white hover:bg-brand-700">
+      Ver más
+    </a>
+  </InfoBlock>
+
+  <InfoBlock eyebrow="2" title="Mejoremos Juntos — Radicación de PQRDSF" class="bg-brand-50/40">
+    <p class="max-w-2xl">Participa en el diagnóstico de necesidades e identificación de problemas a través de:</p>
+    <div class="mt-6">
+      <PqrsdfCards />
+    </div>
+    <a href="/pqrs/" class="mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold !text-white hover:bg-brand-700">
+      Tramita tu PQRSDF
+    </a>
+  </InfoBlock>
+
+  <InfoBlock eyebrow="3" title="Participación ciudadana">
+    <p class="max-w-2xl">Conoce cómo participar activamente en el mejoramiento de nuestros servicios de salud.</p>
+    <a href={pdfs.participacionCiudadana} target="_blank" rel="noopener" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold !text-white hover:bg-brand-700">
+      Ver más
+    </a>
+  </InfoBlock>
+
+  <InfoBlock eyebrow="4" title="Asignación de citas" class="bg-brand-50/40">
+    <p class="max-w-2xl">
+      Escríbenos a <a href="mailto:lidercall.sedes.ferro@gmail.com" class="text-brand-600 hover:underline">lidercall.sedes.ferro@gmail.com</a> o solicita tu cita en línea.
+    </p>
+    <a href="/citas/" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold !text-white hover:bg-brand-700">
+      Solicita tu cita
+    </a>
+  </InfoBlock>
+
+  <InfoBlock eyebrow="5" title="Oficinas SIAU nacional">
+    <p class="max-w-2xl">Consulta el directorio nacional de oficinas de atención al usuario.</p>
+    <a href={site.utmaisfenUrl} target="_blank" rel="noopener" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold !text-white hover:bg-brand-700">
+      Ver más
+    </a>
+  </InfoBlock>
+</BaseLayout>

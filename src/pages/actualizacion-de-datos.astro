@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoBlock from '../components/InfoBlock.astro';
+import VisualForm from '../components/VisualForm.astro';
+import { actualizacionDatosFields } from '../data/forms/actualizacionDatosFields';
+import Info from '@/components/Info.astro';
+---
+
+<BaseLayout title="Actualización de datos" description="Ayúdanos a mantener tus datos de contacto actualizados en Sociedad Clínica Emcosalud.">
+  <Info eyebrow="Tu salud es nuestra prioridad" title="Actualización de datos" compact />
+
+  <InfoBlock title="Ayúdanos a cuidarte mejor">
+    <p class="max-w-3xl">
+      Para Sociedad Clínica Emcosalud es fundamental tener tus datos personales actualizados. Esto nos permite
+      contactarte rápidamente ante cualquier novedad sobre tus servicios de salud, asegurar que recibas la
+      información correcta y a tiempo, y ofrecerte una atención más personalizada y eficiente. Tu colaboración es
+      clave para tu bienestar.
+    </p>
+  </InfoBlock>
+
+  <InfoBlock title="Actualiza tus datos" class="bg-brand-50/40">
+    <VisualForm fields={actualizacionDatosFields} />
+  </InfoBlock>
+</BaseLayout>

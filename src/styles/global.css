@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Color Principal: Azul (#003388 en brand-600) */
+  --color-brand-50: #e6eefc;
+  --color-brand-100: #ccddf9;
+  --color-brand-200: #99bbf3;
+  --color-brand-300: #6699ed;
+  --color-brand-400: #3377e7;
+  --color-brand-500: #1a55c4;
+  --color-brand-600: #003388;
+  --color-brand-700: #00296d;
+  --color-brand-800: #001f52;
+  --color-brand-900: #001437;
+  --color-brand-950: #000a1c;
+
+  /* Color de Acento: Verde (#46cd00 en accent-500) */
+  --color-accent-50: #f0fce6;
+  --color-accent-100: #e1f9cc;
+  --color-accent-200: #c3f399;
+  --color-accent-300: #a5ed66;
+  --color-accent-400: #87e733;
+  --color-accent-500: #46cd00;
+  --color-accent-600: #38a400;
+  --color-accent-700: #2a7b00;
+  --color-accent-800: #1c5200;
+  --color-accent-900: #0e2900;
+  --color-accent-950: #071500;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold tracking-tight text-slate-900;
+  }
+
+  a {
+    @apply transition-colors;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
+  }
+
+  /* Estilos tipográficos para Markdown/prose */
+  .prose-emco :where(h2) {
+    @apply mt-10 mb-4 text-2xl font-bold text-slate-900 first:mt-0;
+  }
+  .prose-emco :where(h3) {
+    @apply mt-8 mb-3 text-xl font-bold text-slate-900 first:mt-0;
+  }
+  .prose-emco :where(p) {
+    @apply mb-4 leading-relaxed text-slate-600;
+  }
+  .prose-emco :where(ul, ol) {
+    @apply mb-4 space-y-1.5 pl-5 text-slate-600;
+  }
+  .prose-emco :where(ul) {
+    @apply list-disc;
+  }
+  .prose-emco :where(ol) {
+    @apply list-decimal;
+  }
+  .prose-emco :where(strong) {
+    @apply font-bold text-slate-800;
+  }
+  .prose-emco :where(a) {
+    @apply font-semibold text-brand-600 hover:text-accent-600 hover:underline;
+  }
+  .prose-emco :where(blockquote) {
+    @apply my-6 rounded-2xl border-l-4 border-accent-500 bg-brand-50 p-5 italic text-slate-600;
+  }
+}

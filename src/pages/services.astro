@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoBlock from '../components/InfoBlock.astro';
+import ServicesGrid from '../components/ServicesGrid.astro';
+import SedeCard from '../components/SedeCard.astro';
+import CardLink from '../components/CardLink.astro';
+import TramitesAdministrativos from '../components/TramitesAdministrativos.astro';
+import { sedes } from '../data/sedes';
+import { pdfs } from '../data/pdfs';
+import Info from '@/components/Info.astro';
+---
+
+<BaseLayout
+  title="Sedes"
+  description="Conoce nuestras sedes de atención en Bogotá y Girardot: horarios, especialidades, contactos y ubicación."
+>
+  <Info
+    eyebrow="Sedes de atención"
+    title="Sedes"
+    description="Ponemos a tu disposición una variedad de servicios de alta calidad en nuestras diferentes sedes, diseñados para satisfacer tus necesidades."
+    compact
+  />
+
+  <InfoBlock eyebrow="Sede Exclusiva Country" title="Especialidades y servicios ofrecidos">
+    <ServicesGrid />
+  </InfoBlock>
+
+  <section class="py-10 sm:py-12">
+    <div class="container-page space-y-8">
+      {sedes.map((sede) => <SedeCard sede={sede} />)}
+    </div>
+  </section>
+
+  <InfoBlock>
+    <TramitesAdministrativos />
+  </InfoBlock>
+
+  <InfoBlock eyebrow="Servicios y trámites" title="Haz clic y conoce los servicios que ofrece cada sede">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <CardLink title="Sede Exclusiva Country" description="Ubicada en una zona estratégica para mayor comodidad." href={pdfs.sedeCountry} external />
+      <CardLink title="Sociedad Clínica Emcosalud" description="Servicio médico profesional bajo altos estándares de calidad." href="https://clinicaemcosalud.com" external />
+      <CardLink title="Punto de vacunación fiebre amarilla" description="Vacúnate con la dosis única y gratuita. Protege tu vida y la de los tuyos." href={pdfs.fiebreAmarilla} external />
+      <CardLink title="Sede Girardot" description="Atención integral en servicios clínicos y administrativos. Calle 20 #8-28, Barrio Granada." href={pdfs.sedeGirardot} external />
+      <CardLink
+        title="Sedes propias"
+        description="Garantizamos la prestación del servicio de salud en Bogotá, Girardot, Ibagué, Mariquita, Honda y Neiva."
+        href=""
+      />
+      <CardLink title="Autorizaciones" description="Consulta las opciones disponibles según tu centro de atención." href={pdfs.autorizacionesProceso} external />
+      <CardLink title="Sede UPS Bogotá" description="Dirección: Av. El Dorado 32a-33." href={pdfs.sedeUPSBogota} external />
+    </div>
+  </InfoBlock>
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoBlock from '../components/InfoBlock.astro';
+import DataTable from '../components/DataTable.astro';
+import { sedesPropias, redPrimaria } from '../data/networkIPS';
+import Info from '@/components/Info.astro';
+
+const columns = [
+  { key: 'departamento', label: 'Departamento' },
+  { key: 'municipio', label: 'Municipio' },
+  { key: 'nombreIPS', label: 'Nombre de la IPS' },
+  { key: 'direccion', label: 'Dirección' },
+  { key: 'telefono', label: 'Teléfono / WhatsApp' },
+  { key: 'servicios', label: 'Servicios' },
+];
+---
+
+<BaseLayout
+  title="Red de Atención"
+  description="Requisitos y red de sedes/IPS habilitadas para gestionar autorizaciones en Sociedad Clínica Emcosalud."
+>
+  <Info eyebrow="Autorizaciones" title="Requisitos para atención" compact>
+    <p class="mt-4 max-w-2xl text-sm text-slate-500">
+      Apreciado usuario, recuerda que dependiendo de tu centro de atención, tenemos diferentes opciones para ti.
+    </p>
+  </Info>
+
+  <InfoBlock title="Requisitos">
+    <ul class="list-disc space-y-2 pl-5">
+      <li>Orden médica vigente (no más de tres meses de expedida). Para solicitudes no presenciales, enviar imagen o archivo en formato PDF, claro y legible.</li>
+      <li>Historia clínica vigente (no más de tres meses de expedida). Para solicitudes no presenciales, enviar imagen o archivo en formato PDF, claro y legible.</li>
+      <li>Dos números de contacto actualizados del paciente y/o familiar responsable.</li>
+      <li>Correo electrónico activo y vigente.</li>
+    </ul>
+    <p class="mt-4 text-sm italic text-slate-500">Espera nuestra respuesta en un tiempo no mayor a 5 días hábiles.</p>
+  </InfoBlock>
+
+  <InfoBlock eyebrow="Canales de acceso" title="Sedes propias">
+    <p class="mb-6 max-w-3xl">
+      De manera presencial en nuestras sedes propias o a través de canales no presenciales:
+    </p>
+    <DataTable columns={columns} rows={sedesPropias} caption="Sedes propias de Emcosalud" />
+  </InfoBlock>
+
+  <InfoBlock eyebrow="Red de atención" title="Red primaria de IPS asociadas" class="bg-brand-50/40">
+    <p class="mb-6 max-w-3xl">
+      También puedes acudir a las IPS primarias de nuestra red o sus canales no presenciales:
+    </p>
+    <DataTable columns={columns} rows={redPrimaria} caption="Red primaria de IPS asociadas" />
+  </InfoBlock>
+</BaseLayout>

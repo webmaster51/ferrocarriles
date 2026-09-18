@@ -1,0 +1,67 @@
+---
+import Logo from './Logo.astro';
+import MapPinIcon from './icons/MapPinIcon.astro';
+import WhatsAppIcon from './icons/WhatsAppIcon.astro';
+import { mainNav, quickLinks, site } from '../data/site';
+import { sedes } from '../data/sedes';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-brand-800 text-brand-100">
+  <div class="container-page grid gap-10 py-14 md:grid-cols-4">
+    <div class="md:col-span-1">
+      <a href="/" class="inline-flex" aria-label={`${site.name} — inicio`}>
+        <Logo variant="light" class="h-18 w-auto" />
+      </a>
+      <p class="mt-4 text-sm leading-relaxed text-brand-200">{site.description}</p>
+      <div class="mt-5 flex flex-col gap-2 text-sm">
+        <a href={`tel:${site.lineaNacional}`} class="hover:text-white">Línea nacional 24h: {site.lineaNacional}</a>
+        <a href={site.whatsappChannel} target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-white">
+          <WhatsAppIcon class="h-4 w-4" />
+          Canal de WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-bold uppercase tracking-wide text-white">Enlaces rápidos</h3>
+      <ul class="mt-4 space-y-2 text-sm">
+        {mainNav.map((item) => (
+          <li><a href={item.href} class="text-brand-200 hover:text-white">{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-bold uppercase tracking-wide text-white">Trámites</h3>
+      <ul class="mt-4 space-y-2 text-sm">
+        {quickLinks.map((item) => (
+          <li><a href={item.href} class="text-brand-200 hover:text-white">{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-bold uppercase tracking-wide text-white">Nuestras sedes</h3>
+      <ul class="mt-4 space-y-3 text-sm">
+        {sedes.map((sede) => (
+          <li class="flex items-start gap-2">
+            <MapPinIcon class="mt-0.5 h-4 w-4 shrink-0 text-brand-300" />
+            <span class="text-brand-200">
+              <span class="block font-semibold text-white">{sede.nombre}</span>
+              {sede.direccion}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-brand-800">
+    <div class="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-brand-300 sm:flex-row">
+      <p>&copy; {year} {site.legalName}. Todos los derechos reservados.</p>
+      <p>Fondo de Pasivo Social de Ferrocarriles Nacionales de Colombia</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoBlock from '../components/InfoBlock.astro';
+import VisualForm from '../components/VisualForm.astro';
+import { citasFields } from '../data/forms/citasFields';
+import Info from '@/components/Info.astro';
+---
+
+<BaseLayout title="Solicitud de citas" description="Solicita tu cita médica en Sociedad Clínica Emcosalud.">
+  <Info eyebrow="Citas" title="Proceso de solicitud de citas" compact />
+
+  <InfoBlock title="Cómo funciona">
+    <p class="max-w-3xl">
+      Este formulario ha sido diseñado por Emcosalud para facilitar la gestión y agendamiento de citas médicas. A
+      través de este espacio podrás enviar toda la información necesaria para solicitar tu atención médica de
+      manera rápida y ordenada.
+    </p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+        <h3 class="text-sm font-bold text-amber-800">Importante</h3>
+        <ul class="mt-2 list-disc space-y-1 pl-4 text-sm text-amber-800/90">
+          <li>El formulario debe completarse en su totalidad y en un solo envío.</li>
+          <li>No se permite el uso de llamadas telefónicas para esta gestión.</li>
+          <li>Las solicitudes serán atendidas en estricto orden de llegada.</li>
+        </ul>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-5">
+        <h3 class="text-sm font-bold text-slate-800">Datos requeridos</h3>
+        <ul class="mt-2 list-disc space-y-1 pl-4 text-sm text-slate-600">
+          <li>Documento de identidad y nombre completo</li>
+          <li>Número de teléfono de contacto</li>
+          <li>Historia clínica (foto o PDF)</li>
+          <li>Orden médica (foto o PDF)</li>
+        </ul>
+      </div>
+    </div>
+  </InfoBlock>
+
+  <InfoBlock title="Solicita tu cita" class="bg-brand-50/40">
+    <VisualForm fields={citasFields} />
+  </InfoBlock>
+</BaseLayout>

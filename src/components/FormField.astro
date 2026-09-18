@@ -1,0 +1,64 @@
+---
+import type { FormFieldDef } from '../data/forms/types';
+
+interface Props {
+  field: FormFieldDef;
+}
+
+const { field } = Astro.props;
+const id = `field-${field.name}`;
+const wrapperClass = field.fullWidth ? 'sm:col-span-2' : '';
+const baseInputClass =
+  'w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100';
+---
+
+{
+  field.type === 'checkbox' ? (
+    <div class={`flex items-start gap-2.5 ${wrapperClass}`}>
+      <input id={id} name={field.name} type="checkbox" required={field.required} class="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" />
+      <label for={id} class="text-sm text-slate-600">
+        {field.label} {field.required && <span class="text-red-500">*</span>}
+      </label>
+    </div>
+  ) : (
+    <div class={wrapperClass}>
+      <label for={id} class="mb-1.5 block text-sm font-semibold text-slate-700">
+        {field.label} {field.required && <span class="text-red-500">*</span>}
+      </label>
+
+      {field.type === 'select' && (
+        <select id={id} name={field.name} required={field.required} class={baseInputClass}>
+          <option value="" disabled selected>
+            Selecciona una opción
+          </option>
+          {field.options?.map((opt) => <option value={opt}>{opt}</option>)}
+        </select>
+      )}
+
+      {field.type === 'textarea' && (
+        <textarea id={id} name={field.name} required={field.required} rows={5} class={baseInputClass} placeholder={field.placeholder} />
+      )}
+
+      {field.type === 'file' && (
+        <input
+          id={id}
+          name={field.name}
+          type="file"
+          accept={field.accept}
+          class="block w-full cursor-pointer rounded-xl border border-dashed border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-brand-700"
+        />
+      )}
+
+      {['text', 'email', 'tel'].includes(field.type) && (
+        <input
+          id={id}
+          name={field.name}
+          type={field.type as 'text' | 'email' | 'tel'}
+          required={field.required}
+          placeholder={field.placeholder}
+          class={baseInputClass}
+        />
+      )}
+    </div>
+  )
+}

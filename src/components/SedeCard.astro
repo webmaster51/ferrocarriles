@@ -1,0 +1,110 @@
+---
+import { Phone, Mail, Clock } from '@lucide/astro';
+import MapPinIcon from './icons/MapPinIcon.astro';
+import WhatsAppIcon from './icons/WhatsAppIcon.astro';
+import DataTable from './DataTable.astro';
+import { girardotSchedule } from '../data/girardotSchedule';
+import { pdfUrlFor, type Sede } from '../data/sedes';
+
+interface Props {
+  sede: Sede;
+}
+
+const { sede } = Astro.props;
+const pdfUrl = pdfUrlFor(sede);
+
+const scheduleColumns = [
+  { key: 'servicio', label: 'Servicio' },
+  { key: 'lunesAViernes', label: 'Lunes a viernes' },
+  { key: 'sabados', label: 'Sábados' },
+];
+const scheduleRows = girardotSchedule.map((r) => ({ servicio: r.servicio, lunesAViernes: r.lunesAViernes, sabados: r.sabados }));
+---
+
+<div id={sede.id} class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+  <div class="grid gap-0 lg:grid-cols-2">
+    <div class="p-6 sm:p-8">
+      <h3 class="text-xl font-bold text-slate-900">{sede.nombre}</h3>
+      <p class="mt-1.5 flex items-center gap-1.5 text-sm text-slate-500">
+        <MapPinIcon class="h-4 w-4 shrink-0 text-brand-600" />
+        {sede.direccion}
+      </p>
+
+      {sede.horarios && (
+        <dl class="mt-6 grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-brand-600">
+              <Clock size={14} /> Línea de frente
+            </dt>
+            <dd class="mt-1 text-sm text-slate-600">{sede.horarios.lineaFrente}</dd>
+          </div>
+          <div>
+            <dt class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-brand-600">
+              <Clock size={14} /> Dispensación de medicamentos
+            </dt>
+            <dd class="mt-1 text-sm text-slate-600">{sede.horarios.dispensacion}</dd>
+          </div>
+          <div>
+            <dt class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-brand-600">
+              <Clock size={14} /> Toma de muestras
+            </dt>
+            <dd class="mt-1 text-sm text-slate-600">{sede.horarios.tomaMuestras}</dd>
+          </div>
+          <div>
+            <dt class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-brand-600">
+              <Clock size={14} /> Atención al usuario (SIAU)
+            </dt>
+            <dd class="mt-1 text-sm text-slate-600">{sede.horarios.siau}</dd>
+          </div>
+        </dl>
+      )}
+
+      <ul class="mt-6 space-y-3 border-t border-slate-100 pt-6">
+        {sede.contacts.map((contact) => (
+          <li>
+            <p class="text-sm font-bold text-slate-800">{contact.label}</p>
+            <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
+              {contact.email && (
+                <a href={`mailto:${contact.email}`} class="inline-flex items-center gap-1.5 hover:text-brand-700">
+                  <Mail size={14} /> {contact.email}
+                </a>
+              )}
+              {contact.whatsapp && (
+                <a href={`https://wa.me/57${contact.whatsapp}`} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-brand-700">
+                  <WhatsAppIcon class="h-3.5 w-3.5" /> {contact.whatsapp}
+                </a>
+              )}
+            </div>
+            {contact.note && <p class="mt-1 text-xs text-slate-500">{contact.note}</p>}
+          </li>
+        ))}
+      </ul>
+
+      {sede.hasScheduleTable && (
+        <div class="mt-6 border-t border-slate-100 pt-6">
+          <p class="mb-3 text-sm font-bold text-slate-800">Horario de atención</p>
+          <DataTable columns={scheduleColumns} rows={scheduleRows} caption={`Horario de atención ${sede.nombre}`} />
+        </div>
+      )}
+
+      <a
+        href={pdfUrl}
+        target="_blank"
+        rel="noopener"
+        class="mt-6 inline-flex items-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-700 hover:bg-brand-100"
+      >
+        <Phone size={16} /> Ver información completa (PDF)
+      </a>
+    </div>
+
+    <div class="min-h-[320px] bg-slate-100 lg:min-h-full">
+      <iframe
+        src={sede.mapEmbedSrc}
+        class="h-full min-h-[320px] w-full border-0"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title={`Mapa de ubicación — ${sede.nombre}`}
+      ></iframe>
+    </div>
+  </div>
+</div>

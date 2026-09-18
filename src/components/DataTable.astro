@@ -1,0 +1,52 @@
+---
+export interface Column {
+  key: string;
+  label: string;
+}
+
+interface Props {
+  columns: Column[];
+  rows: Record<string, string>[];
+  caption?: string;
+}
+
+const { columns, rows, caption } = Astro.props;
+---
+
+<div class="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+  {caption && <p class="sr-only">{caption}</p>}
+
+  <!-- Desktop / tablet: real table -->
+  <table class="hidden w-full border-collapse text-left text-sm md:table">
+    <thead class="bg-brand-50">
+      <tr>
+        {columns.map((col) => (
+          <th scope="col" class="px-4 py-3 font-bold text-brand-800">{col.label}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100 bg-white">
+      {rows.map((row) => (
+        <tr class="hover:bg-slate-50">
+          {columns.map((col) => (
+            <td class="px-4 py-3 align-top text-slate-600">{row[col.key]}</td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <!-- Mobile: stacked cards, avoids horizontal overflow with many columns -->
+  <ul class="divide-y divide-slate-100 bg-white md:hidden">
+    {rows.map((row) => (
+      <li class="space-y-1.5 px-4 py-4">
+        {columns.map((col, i) => (
+          <p class={i === 0 ? 'font-bold text-slate-900' : 'text-sm text-slate-600'}>
+            {i > 0 && <span class="font-semibold text-slate-400">{col.label}: </span>}
+            {row[col.key]}
+          </p>
+        ))}
+      </li>
+    ))}
+  </ul>
+</div>

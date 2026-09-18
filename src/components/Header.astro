@@ -1,0 +1,117 @@
+---
+import Logo from './Logo.astro';
+import MobileMenu from './MobileMenu.astro';
+import { mainNav, site } from '../data/site';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+  <div class="bg-brand-800 text-white">
+    <div class="container-page flex flex-wrap items-center justify-between gap-2 py-1.5 text-xs sm:text-sm">
+      <p class="flex items-center gap-1.5">
+        <span class="font-semibold">Línea nacional 24 horas:</span>
+        <a href={`tel:${site.lineaNacional}`} class="hover:text-brand-200">{site.lineaNacional}</a>
+      </p>
+      <p class="hidden sm:flex items-center gap-1.5">
+        <span class="font-semibold">Bogotá:</span>
+        <a href={`tel:${site.lineaBogota}`} class="hover:text-brand-200">{site.lineaBogota}</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="container-page flex h-16 items-center justify-between gap-4">
+    <a href="/" class="flex shrink-0 items-center" aria-label={`${site.name} — inicio`}>
+      <Logo variant="dark" class="h-180 w-35 sm:h-50" />
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Navegación principal">
+      {
+        mainNav.map((item) => {
+          const hasChildren = item.children && item.children.length > 0;
+          const isActive = item.href
+            ? item.href === '/'
+              ? currentPath === '/'
+              : currentPath.startsWith(item.href)
+            : item.children?.some((child) => currentPath.startsWith(child.href));
+
+          if (hasChildren) {
+            return (
+              <div class="relative group">
+                <button
+                  type="button"
+                  class:list={[
+                    'inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-colors',
+                    isActive ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:bg-brand-50 hover:text-brand-700',
+                  ]}
+                  aria-expanded="false"
+                >
+                  <span>{item.label}</span>
+                  <svg
+                    class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </button>
+
+                {/* Submenú Desplegable */}
+                <div class="invisible absolute left-0 top-full pt-2 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 z-50">
+                  <div class="w-56 rounded-xl border border-slate-100 bg-white p-1.5 shadow-xl ring-1 ring-slate-900/5">
+                    {item.children?.map((child) => {
+                      const isChildActive = currentPath === child.href;
+                      return (
+                        <a
+                          href={child.href}
+                          target={child.external ? '_blank' : undefined}
+                          rel={child.external ? 'noopener noreferrer' : undefined}
+                          class:list={[
+                            'block rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                            isChildActive
+                              ? 'bg-brand-50 text-brand-700 font-semibold'
+                              : 'text-slate-600 hover:bg-brand-50 hover:text-brand-700',
+                          ]}
+                        >
+                          {child.label}
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <a
+              href={item.href}
+              target={item.external ? '_blank' : undefined}
+              rel={item.external ? 'noopener noreferrer' : undefined}
+              class:list={[
+                'rounded-lg px-3 py-2 text-sm font-semibold transition-colors',
+                isActive ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:bg-brand-50 hover:text-brand-700',
+              ]}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <div class="hidden shrink-0 md:block">
+      <a
+        href="/citas/"
+        class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
+      >
+        Solicitar cita
+      </a>
+    </div>
+
+    <MobileMenu items={mainNav} />
+  </div>
+</header>

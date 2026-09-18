@@ -1,0 +1,14 @@
+---
+import logoDark from '../assets/logo.svg';
+import logoLight from '../assets/logo-light.svg';
+
+interface Props {
+  variant?: 'dark' | 'light';
+  class?: string;
+}
+
+const { variant = 'dark', class: className = 'h-8 w-auto' } = Astro.props;
+const src = variant === 'light' ? logoLight : logoDark;
+---
+
+<img src={src.src ?? src} alt="Ferrocarriles Sociedad Clínica Emcosalud" class={className} width="188" height="45" loading="eager" decoding="async" />

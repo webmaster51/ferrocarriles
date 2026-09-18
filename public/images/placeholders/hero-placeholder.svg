@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eef2f8"/>
+      <stop offset="55%" stop-color="#b8c9e1"/>
+      <stop offset="100%" stop-color="#24417c"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="900" fill="url(#heroGrad)"/>
+  <circle cx="640" cy="180" r="220" fill="#ffffff" opacity="0.10"/>
+  <circle cx="120" cy="760" r="260" fill="#0a1426" opacity="0.08"/>
+  <g opacity="0.9" transform="translate(300,380)">
+    <circle cx="100" cy="100" r="96" fill="#ffffff" opacity="0.9"/>
+    <path d="M100 55v90M55 100h90" stroke="#24417c" stroke-width="12" stroke-linecap="round"/>
+  </g>
+</svg>
