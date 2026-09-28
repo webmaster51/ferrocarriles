@@ -2,7 +2,9 @@
 interface CTA {
   label: string;
   href: string;
-};
+  target?: string;
+  rel?: string;
+}
 
 interface Props {
   eyebrow?: string;
@@ -39,12 +41,22 @@ const {
       {(primaryCta || secondaryCta) && (
         <div class="mt-8 flex flex-wrap gap-3">
           {primaryCta && (
-            <a href={primaryCta.href} class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700">
+            <a 
+              href={primaryCta.href} 
+              target={primaryCta.target} 
+              rel={primaryCta.rel}
+              class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
+            >
               {primaryCta.label}
             </a>
           )}
           {secondaryCta && (
-            <a href={secondaryCta.href} class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-brand-200 hover:text-brand-700">
+            <a 
+              href={secondaryCta.href} 
+              target={secondaryCta.target} 
+              rel={secondaryCta.rel}
+              class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-brand-200 hover:text-brand-700"
+            >
               {secondaryCta.label}
             </a>
           )}
