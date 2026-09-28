@@ -3,9 +3,13 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
 export const prerender = false;
 
-const CMS_URL = 'http://localhost:4321'; // URL base de tu backend/CMS
 const { slug } = Astro.params;
 
+// 1. OBTENER EL SLUG DEL PORTAL ACTUAL
+const portalSlug = 
+  Astro.request.headers.get('x-portal-slug') || 
+  Astro.url.searchParams.get('portal') || 
+  'ferrocarriles';
 interface PostView {
   id: string;
   title: string;
@@ -21,21 +25,14 @@ interface PostView {
 let post: PostView | null = null;
 
 try {
-  // Consultamos exactamente igual que en tu otra página funcional, apuntando al CMS
-  const response = await fetch(`${CMS_URL}/api/blog/${slug}`);
+  // 2. PASAR EL PORTAL AL ENDPOINT DEL CMS
+  const response = await fetch(`http://localhost:4321/api/blog/${slug}?portal=${portalSlug}`);
 
   if (response.ok) {
     const json = await response.json();
     const data = json.data;
 
     if (data) {
-      let imageUrl = data.featuredUrl || '';
-
-      // Si la imagen viene en ruta relativa, le anteponemos el dominio del CMS
-      if (imageUrl && imageUrl.startsWith('/')) {
-        imageUrl = `${CMS_URL}${imageUrl}`;
-      }
-
       post = {
         id: data.id,
         title: data.title,
@@ -43,7 +40,7 @@ try {
         excerpt: data.excerpt,
         publishedAt: data.publishedAt,
         createdAt: data.createdAt,
-        imageUrl,
+        imageUrl: data.featuredUrl || '',
         authorName: data.authorName,
         categoryName: data.categoryName,
       };
@@ -53,7 +50,6 @@ try {
   console.error('Error al conectar con el CMS para el detalle del blog:', error);
 }
 
-// Si no se encuentra el post, redirige a 404
 if (!post) {
   return Astro.redirect('/404');
 }
@@ -71,7 +67,6 @@ function formatDate(iso: string) {
 <BaseLayout title={post.title}>
   <article class="section-block py-10 sm:py-16">
     <div class="container-page max-w-4xl">
-      <!-- Botón de regreso -->
       <p class="mb-6">
         <a
           href="/blog"
@@ -82,7 +77,6 @@ function formatDate(iso: string) {
         </a>
       </p>
 
-      <!-- Encabezado de la publicación -->
       <header class="mb-8">
         <div class="mb-3 flex items-center gap-3 text-sm font-bold text-slate-500">
           {post.categoryName && (
@@ -100,7 +94,6 @@ function formatDate(iso: string) {
         </h1>
       </header>
 
-      <!-- Imagen Principal Completa -->
       {post.imageUrl && (
         <div class="mb-10 overflow-hidden rounded-2xl bg-slate-100 shadow-sm aspect-video flex items-center justify-center">
           <img
@@ -111,7 +104,6 @@ function formatDate(iso: string) {
         </div>
       )}
 
-      <!-- Contenido HTML enriquecido desde el CMS -->
       <div class="prose prose-slate max-w-none text-slate-700 prose-headings:text-brand-blue prose-a:text-brand-green-dark hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-sm">
         <Fragment set:html={post.contentHtml} />
       </div>

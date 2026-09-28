@@ -1,13 +1,13 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-// Desactivar el prerenderizado para capturar la query string `?page=X` en cada petición
 export const prerender = false;
 
-// 1. Configuración de tu Portal y CMS
-const PORTAL_ID = 1; // <--- Cambia por el ID real de este portal en tu base de datos
-const CMS_URL = 'http://localhost:4321'; // URL base de tu backend/CMS
-
+// 1. OBTENER EL SLUG DEL PORTAL (Asegurándote de que coincida con tu lógica de layouts o headers)
+const portalSlug = 
+  Astro.request.headers.get('x-portal-slug') || 
+  Astro.url.searchParams.get('portal') || 
+  'ferrocarriles';
 // Obtener el número de página actual desde la URL (?page=1 por defecto)
 const pageParam = Astro.url.searchParams.get('page');
 const currentPage = pageParam ? Math.max(1, parseInt(pageParam, 10) || 1) : 1;
@@ -34,25 +34,21 @@ let posts: {
 let totalPages = 1;
 
 try {
-  // 2. Consumimos el endpoint JSON pasando tanto la paginación como el portalId
-  const response = await fetch(`http://localhost:4321/api/blog.json?page=${currentPage}&limit=${PER_PAGE}`);
+  // 2. ENVIAR EL `portal` AL ENDPOINT DEL CMS
+  const response = await fetch(
+    `http://localhost:4321/api/blog.json?page=${currentPage}&limit=${PER_PAGE}&portal=${portalSlug}`
+  );
 
   if (response.ok) {
     const json = await response.json();
     const rawPosts: PostItem[] = json.data ?? [];
     
-    // Obtenemos el total de páginas directamente desde los metadatos devueltos por el DTO del CMS
     if (json.meta?.totalPages) {
       totalPages = json.meta.totalPages;
     }
 
     posts = rawPosts.map((post) => {
-      let imageUrl = post.featuredUrl || '';
-
-      // 3. Solución definitiva para imágenes: si la ruta es relativa, le anteponemos el dominio del CMS
-      if (imageUrl && imageUrl.startsWith('/')) {
-        imageUrl = `${CMS_URL}${imageUrl}`;
-      }
+      const imageUrl = post.featuredUrl || '';
 
       return {
         id: post.id,
@@ -89,7 +85,6 @@ function formatDate(iso: string) {
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <article class="card-base flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-lg">
-                <!-- Imagen del post -->
                 <a href={`/blog/${post.slug}`} class="block aspect-video overflow-hidden bg-slate-100">
                   {post.imageUrl ? (
                     <img
@@ -105,7 +100,6 @@ function formatDate(iso: string) {
                   )}
                 </a>
 
-                <!-- Contenido -->
                 <div class="flex flex-1 flex-col p-5">
                   <time class="mb-2 block text-xs font-bold text-brand-green-dark" datetime={post.date}>
                     {formatDate(post.date)}
@@ -121,7 +115,7 @@ function formatDate(iso: string) {
             ))}
           </div>
 
-          <!-- Controles de Paginación -->
+          <!-- Controles de Paginación (mantienen el portal si se desea, o por query params) -->
           {totalPages > 1 && (
             <nav class="mt-12 flex items-center justify-center gap-4" aria-label="Navegación del blog">
               {currentPage > 1 ? (
