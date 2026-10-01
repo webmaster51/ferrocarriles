@@ -4,6 +4,6 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   site: 'https://ferrocarriles.clinicaemcosalud.com',
+  output: 'server', 
   integrations: [sitemap(), react()],
-  // Ya no requerimos la sección vite con el plugin de tailwind aquí
 });
