@@ -4,6 +4,7 @@ import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 import { site } from '../data/site';
 import Popup from '@/components/react/Popup';
+import WhatsAppButton from '@/components/react/WhatsAppButton';
 
 interface Props {
   title: string;
@@ -94,5 +95,13 @@ try {
         frequency={activePopup.frequency}
       />
     )}
+
+
+    <WhatsAppButton 
+      client:idle 
+      phoneNumber="+573053353786" 
+      message="Hola, me gustaría agendar cita." 
+      companyName="Ferrocarriles" 
+    />
   </body>
 </html>
