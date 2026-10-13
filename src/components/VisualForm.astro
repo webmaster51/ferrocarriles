@@ -5,7 +5,7 @@ import type { FormFieldDef } from '../data/forms/types';
 interface Props {
   fields: FormFieldDef[];
   submitLabel?: string;
-  formType: 'pqrs' | 'cita';
+  formType: 'pqrs' | 'cita' | 'actualizacion';
 }
 
 const { fields, submitLabel = 'Enviar', formType } = Astro.props;

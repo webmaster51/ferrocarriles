@@ -55,6 +55,11 @@ export const POST: APIRoute = async ({ request }) => {
     } else if (formType === 'cita') {
       const nombreCita = formValues.nombreCompleto || 'Sin nombre';
       subject = `[CITA] Nueva solicitud - ${nombreCita}`;
+    } else if (formType === 'actualizacion') {
+      const nombreActualizacion = [formValues.nombres, formValues.apellidos].filter(Boolean).join(' ') 
+        || formValues.nombreCompleto 
+        || 'Sin nombre';
+      subject = `[ACTUALIZACIÓN] Solicitud de actualización - ${nombreActualizacion}`;
     }
 
     // 4. Construcción de la tabla HTML con los datos
@@ -67,9 +72,19 @@ export const POST: APIRoute = async ({ request }) => {
       `)
       .join('');
 
+    // Título dinámico para el encabezado del correo según el tipo de formulario
+    let tituloHtml = 'Nuevo Mensaje Web';
+    if (formType === 'pqrs') {
+      tituloHtml = 'Nueva Solicitud de PQRS';
+    } else if (formType === 'cita') {
+      tituloHtml = 'Nueva Solicitud de Cita';
+    } else if (formType === 'actualizacion') {
+      tituloHtml = 'Nueva Solicitud de Actualización de Datos ';
+    }
+
     const html = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto;">
-        <h2 style="color: #1e293b;">${formType === 'pqrs' ? 'Nueva Solicitud de PQRS' : 'Nueva Solicitud de Cita'}</h2>
+        <h2 style="color: #1e293b;">${tituloHtml}</h2>
         <table style="width: 100%; border-collapse: collapse;">
           ${rows}
         </table>
