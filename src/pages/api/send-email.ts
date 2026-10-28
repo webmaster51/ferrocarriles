@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    let recipientEmail = 'webmaster@emcosalud.com';
+    let recipientEmail = 'citas.sedes.ferro@gmail.com';
     let subject = 'Nuevo mensaje desde la web';
 
     // 3. Asuntos dinámicos basados en el tipo de formulario
@@ -93,7 +93,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // 5. Envío del correo a través de Resend con los archivos adjuntos (si existen)
     const response = await resend.emails.send({
-      from: 'Ferrocarriles Web <onboarding@resend.dev>',
+      from: 'Ferrocarriles Web <onboarding@gestion.emcosalud.com.co>',
       to: [recipientEmail],
       subject,
       html,

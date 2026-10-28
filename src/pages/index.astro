@@ -6,6 +6,7 @@ import VideoEmbed from '../components/VideoEmbed.astro';
 import CardLink from '../components/CardLink.astro';
 import { site } from '../data/site';
 import Hero  from '@/components/sections/Hero.astro';
+import BlogPreview from '@/components/sections/BlogPreview.astro'
 
 const testimonios = [
   { id: 'XXZtB78ueIw', title: 'Testimonio de usuario Emcosalud 1' },
@@ -67,4 +68,5 @@ const testimonios = [
       <CardLink title="Contacto" description="Encuentra todos nuestros teléfonos, correos y canales de atención." href="/contact/" />
     </div>
   </InfoBlock>
+  <BlogPreview />
 </BaseLayout>

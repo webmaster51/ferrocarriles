@@ -1,0 +1,121 @@
+---
+interface PostItem {
+  id: string;
+  title: string;
+  excerpt?: string | null;
+  publishedAt?: string | null;
+  createdAt: string;
+  slug: string;
+  featuredUrl?: string | null;
+}
+
+let posts: {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  slug: string;
+  imageUrl: string;
+}[] = [];
+
+const portalSlug = 
+  Astro.request.headers.get('x-portal-slug') || 
+  Astro.url.searchParams.get('portal') || 
+  'ferrocarriles';
+// Obtener el número de página actual desde la URL (?page=1 por defecto)
+const pageParam = Astro.url.searchParams.get('page');
+const currentPage = pageParam ? Math.max(1, parseInt(pageParam, 10) || 1) : 1;
+const PER_PAGE = 5;
+
+try {
+  // Consumimos el endpoint JSON limpio del CMS (puerto 4321) pidiendo exactamente 4 elementos
+  const response = await fetch(
+    `https://gestion.emcosalud.com.co/api/blog.json?page=${currentPage}&limit=${PER_PAGE}&portal=${portalSlug}`
+  );
+
+  if (response.ok) {
+    const json = await response.json();
+    const rawPosts: PostItem[] = json.data ?? [];
+
+    posts = rawPosts.map((post) => {
+      // Usamos exclusivamente la imagen provista por el CMS
+      const imageUrl = post.featuredUrl || '';
+
+      return {
+        id: post.id,
+        title: post.title,
+        excerpt: post.excerpt || '',
+        date: post.publishedAt || post.createdAt,
+        slug: post.slug,
+        imageUrl,
+      };
+    });
+  }
+} catch (error) {
+  console.error('Error al obtener las publicaciones para el inicio:', error);
+  posts = [];
+}
+
+function formatDate(iso: string) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+---
+
+{posts.length > 0 && (
+  <section class="section-block bg-slate-50 py-12 sm:py-16">
+    <div class="container-page">
+      <!-- Encabezado de la sección -->
+      <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <h2 class="section-title">Últimas publicaciones</h2>
+          <p class="section-lead mt-1 text-slate-600">Mantente informado con nuestras noticias y artículos de salud.</p>
+        </div>
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-1 font-semibold text-brand-blue transition hover:text-brand-green-dark"
+        >
+          Ver todo el blog &rarr;
+        </a>
+      </div>
+
+      <!-- Cuadrícula con las 4 tarjetas (2 columnas en sm, 4 columnas en lg) -->
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {posts.map((post) => (
+          <article class="card-base flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-lg">
+            <a href={`/blog/${post.slug}`} class="block aspect-video overflow-hidden bg-slate-100">
+              {post.imageUrl ? (
+                <img
+                  src={post.imageUrl}
+                  alt={post.title}
+                  class="h-full w-full object-cover transition duration-300 hover:scale-105"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="flex h-full w-full items-center justify-center bg-slate-200 text-xs text-slate-400">
+                  Sin imagen
+                </div>
+              )}
+            </a>
+
+            <div class="flex flex-1 flex-col p-4">
+              <time class="mb-2 block text-xs font-bold text-brand-green-dark" datetime={post.date}>
+                {formatDate(post.date)}
+              </time>
+              <h3 class="m-0 mb-2 text-base font-bold leading-tight">
+                <a href={`/blog/${post.slug}`} class="text-brand-blue no-underline hover:text-brand-green-dark">
+                  <Fragment set:html={post.title} />
+                </a>
+              </h3>
+              <p class="m-0 text-xs text-slate-600 line-clamp-2">{post.excerpt}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
