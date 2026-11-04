@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    let recipientEmail = 'citas.sedes.ferro@gmail.com';
+    let recipientEmail = 'lidercall.sedes.ferro@gmail.com ';
     let subject = 'Nuevo mensaje desde la web';
 
     // 3. Asuntos dinámicos basados en el tipo de formulario
